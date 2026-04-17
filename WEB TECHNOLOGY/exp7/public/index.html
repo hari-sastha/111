@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Real-Time Chat App</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f4f4f4;
+            text-align:center;
+        }
+
+        #chat-box{
+            width:60%;
+            height:300px;
+            margin:auto;
+            border:1px solid black;
+            overflow-y:scroll;
+            background:white;
+            padding:10px;
+        }
+
+        input{
+            padding:10px;
+            margin:5px;
+            width:200px;
+        }
+
+        button{
+            padding:10px 20px;
+            background:blue;
+            color:white;
+            border:none;
+        }
+
+        .message{
+            text-align:left;
+            margin:5px;
+            padding:5px;
+            background:#e3e3e3;
+            border-radius:5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Simple Chat Application</h2>
+
+    <div id="chat-box"></div>
+
+    <br>
+
+    <input type="text" id="username" placeholder="Enter Username">
+
+    <input type="text" id="message" placeholder="Enter Message">
+
+    <button onclick="sendMessage()">Send</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        // Connect to socket server
+        const socket = io();
+
+        // Function to send message
+        function sendMessage(){
+
+            const username = document.getElementById("username").value;
+            const message = document.getElementById("message").value;
+
+            // Send username and message
+            socket.emit("chat message", {
+                username: username,
+                message: message
+            });
+
+            // Clear message box
+            document.getElementById("message").value = "";
+        }
+
+        // Receive messages
+        socket.on("chat message", function(data){
+
+            const chatBox = document.getElementById("chat-box");
+
+            chatBox.innerHTML += `
+                <div class="message">
+                    <b>${data.username}:</b> ${data.message}
+                </div>
+            `;
+
+            // Auto scroll down
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+
+</body>
+</html>

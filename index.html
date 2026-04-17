@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>DS</title>
+		<style>
+			:root {
+				--bg: #f6f7f9;
+				--surface: #ffffff;
+				--text: #111827;
+				--muted: rgba(17, 24, 39, 0.7);
+				--border: rgba(17, 24, 39, 0.16);
+				--border-strong: rgba(17, 24, 39, 0.32);
+				--shadow: 0 10px 26px rgba(0, 0, 0, 0.12);
+				--shadow-soft: 0 8px 18px rgba(0, 0, 0, 0.10);
+				--radius: 14px;
+			}
+
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+			}
+
+			body {
+				font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+				color: var(--text);
+				background: var(--bg);
+			}
+
+			#topBar {
+				position: fixed;
+				top: 12px;
+				left: 12px;
+				display: flex;
+				gap: 8px;
+				align-items: flex-start;
+				padding: 10px;
+				background: rgba(255, 255, 255, 0.86);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow-soft);
+				z-index: 20;
+			}
+
+			#dsButton {
+				padding: 8px 12px;
+				font: inherit;
+				cursor: pointer;
+				border-radius: 12px;
+				border: 1px solid var(--border);
+				background: var(--surface);
+				font-weight: 600;
+			}
+
+			#dsButton:hover {
+				border-color: var(--border-strong);
+				box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+			}
+
+			#dsButton:active {
+				transform: translateY(1px);
+			}
+
+			#dsButton:focus-visible {
+				outline: 3px solid rgba(17, 24, 39, 0.22);
+				outline-offset: 2px;
+			}
+
+			#webDropdown > summary {
+				list-style: none;
+				padding: 8px 12px;
+				font: inherit;
+				cursor: pointer;
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				background: var(--surface);
+				font-weight: 600;
+				user-select: none;
+			}
+
+			#webDropdown > summary::after {
+				content: '▾';
+				display: inline-block;
+				margin-left: 8px;
+				color: var(--muted);
+			}
+
+			#webDropdown[open] > summary::after {
+				content: '▴';
+			}
+
+			#webDropdown > summary:hover {
+				border-color: var(--border-strong);
+				box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+			}
+
+			#webDropdown > summary:active {
+				transform: translateY(1px);
+			}
+
+			#webDropdown {
+				position: relative;
+			}
+
+			#webDropdown > summary:focus-visible {
+				outline: 3px solid rgba(17, 24, 39, 0.22);
+				outline-offset: 2px;
+			}
+
+			#webDropdown > summary::-webkit-details-marker {
+				display: none;
+			}
+
+			#webMenu {
+				position: absolute;
+				top: calc(100% + 8px);
+				left: 0;
+				min-width: 170px;
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: var(--radius);
+				box-shadow: var(--shadow-soft);
+			}
+
+			.webExpButton {
+				padding: 8px 12px;
+				font: inherit;
+				cursor: pointer;
+				text-align: left;
+				border-radius: 12px;
+				border: 1px solid var(--border);
+				background: var(--surface);
+				font-weight: 600;
+			}
+
+			.webExpButton:hover {
+				border-color: var(--border-strong);
+				box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+			}
+
+			.webExpButton:active {
+				transform: translateY(1px);
+			}
+
+			.webExpButton:focus-visible {
+				outline: 3px solid rgba(17, 24, 39, 0.22);
+				outline-offset: 2px;
+			}
+
+			#instructionsOverlay {
+				position: fixed;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.35);
+				display: none;
+				align-items: center;
+				justify-content: center;
+				padding: 16px;
+				z-index: 9999;
+			}
+
+			#instructionsModal {
+				width: min(760px, 100%);
+				max-height: min(80vh, 720px);
+				overflow: auto;
+				background: var(--surface);
+				border: 1px solid var(--border);
+				border-radius: calc(var(--radius) + 2px);
+				box-shadow: var(--shadow);
+				padding: 16px 16px 14px;
+				box-sizing: border-box;
+			}
+
+			#instructionsHeader {
+				display: flex;
+				align-items: flex-start;
+				justify-content: space-between;
+				gap: 12px;
+				margin-bottom: 10px;
+			}
+
+			#instructionsTitle {
+				font: inherit;
+				font-weight: 700;
+				margin: 0;
+			}
+
+			#instructionsClose {
+				padding: 6px 10px;
+				font: inherit;
+				cursor: pointer;
+				border-radius: 12px;
+				border: 1px solid var(--border);
+				background: var(--surface);
+			}
+
+			#instructionsClose:hover {
+				border-color: var(--border-strong);
+				box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+			}
+
+			#instructionsClose:focus-visible {
+				outline: 3px solid rgba(17, 24, 39, 0.22);
+				outline-offset: 2px;
+			}
+
+			#instructionsBody {
+				font: inherit;
+				color: var(--text);
+			}
+
+			#instructionsBody ol {
+				margin: 0;
+				padding-left: 20px;
+			}
+
+			#instructionsBody li {
+				margin: 6px 0;
+				line-height: 1.4;
+			}
+
+			#instructionsBody li::marker {
+				color: var(--muted);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="topBar">
+			<button id="dsButton" type="button">DS</button>
+			<details id="webDropdown">
+				<summary id="webSummary">Web</summary>
+				<div id="webMenu">
+					<button class="webExpButton" type="button" data-web-exp="1">exp1</button>
+					<button class="webExpButton" type="button" data-web-exp="2">exp2</button>
+					<button class="webExpButton" type="button" data-web-exp="3">exp3</button>
+					<button class="webExpButton" type="button" data-web-exp="4">exp4</button>
+					<button class="webExpButton" type="button" data-web-exp="5">exp5</button>
+					<button class="webExpButton" type="button" data-web-exp="6">exp6</button>
+					<button class="webExpButton" type="button" data-web-exp="7">exp7</button>
+				</div>
+			</details>
+		</div>
+
+		<div id="instructionsOverlay" aria-hidden="true">
+			<div id="instructionsModal" role="dialog" aria-modal="true" aria-labelledby="instructionsTitle">
+				<div id="instructionsHeader">
+					<h2 id="instructionsTitle">Instructions</h2>
+					<button id="instructionsClose" type="button" aria-label="Close instructions">×</button>
+				</div>
+				<div id="instructionsBody"></div>
+			</div>
+		</div>
+		<script src="app.js"></script>
+	</body>
+</html>
+
+
