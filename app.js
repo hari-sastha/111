@@ -145,8 +145,16 @@ function getWebExpSteps(exp) {
 
 	if (exp === '3') {
 		return [
-			`Create a folder named ${expLabel} inside your web server root (example: xampp/htdocs/${expLabel}).`,
-			'Create these files: index.php, add.php, view.php, delete.php, db.php, database.sql.',
+			'Exp3 needs PHP + MySQL, so you must install a local server (XAMPP recommended).',
+			'Download XAMPP (Windows): https://www.apachefriends.org/download.html',
+			'Install XAMPP. Recommended install folder: C:/xampp (default).',
+			"If you want XAMPP inside this experiment folder: during install, set the install path to .../WEB TECHNOLOGY/exp3/xampp (this folder is ignored by git).",
+			'Open XAMPP Control Panel (xampp-control.exe) → start Apache and MySQL.',
+			`Place your project inside the web root (htdocs): create a folder named ${expLabel} in htdocs.`,
+			'Examples:',
+			'- If installed to C:/xampp: C:/xampp/htdocs/exp3',
+			'- If installed to .../exp3/xampp: .../WEB TECHNOLOGY/exp3/xampp/htdocs/exp3',
+			'Inside that exp3 folder, create these files: index.php, add.php, view.php, delete.php, db.php, database.sql.',
 			'Insert snippets into each matching file:',
 			'- index.php: web-exp3-index-php',
 			'- add.php: web-exp3-add-php',
@@ -154,8 +162,8 @@ function getWebExpSteps(exp) {
 			'- delete.php: web-exp3-delete-php',
 			'- db.php: web-exp3-db-php',
 			'- database.sql: web-exp3-database-sql',
-			'Open XAMPP Control Panel → start Apache and MySQL.',
-			'Open http://localhost/phpmyadmin → create DB inventory_db → run the SQL from database.sql.',
+			'Open http://localhost/phpmyadmin → Databases → create: inventory_db',
+			'Open the new database → Import → choose database.sql → Go (or copy/paste SQL into the SQL tab).',
 			'To run: open http://localhost/exp3/index.php in your browser.'
 		];
 	}
