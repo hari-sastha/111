@@ -27,3 +27,7 @@ build/
 
 # Vendor bundles (do not commit)
 WEB TECHNOLOGY/exp3/xampp/
+
+# Local databases
+WEB TECHNOLOGY/exp4/bank.db
+*.db
