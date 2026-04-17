@@ -175,7 +175,9 @@ function getWebExpSteps(exp) {
 			'Insert snippet: web-exp4-app-py.',
 			'Open a terminal in that folder and install requirements: pip install flask werkzeug.',
 			'Run the app: python app.py.',
-			'Open the shown URL (usually http://127.0.0.1:5000) in a browser.'
+			'Open the shown URL (usually http://127.0.0.1:5000) in a browser.',
+			'Login using the sample users: USER1 / 1234 or USER2 / 1234.',
+			'Note: bank.db will be created automatically in the same folder.'
 		];
 	}
 
