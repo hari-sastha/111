@@ -1,50 +1,20 @@
-CREATE TABLE EMPLOYEE (
-    empID INTEGER PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    dept TEXT NOT NULL,
-    hire_date TEXT NOT NULL,
-    salary INTEGER NOT NULL
+CREATE TABLE Employees (
+    EmpID INTEGER PRIMARY KEY,
+    Name TEXT,
+    Department TEXT,
+    Salary REAL,
+    Email TEXT
 );
 
+INSERT INTO Employees VALUES
+(1,'John','HR',30000,'john@gmail.com'),
+(2,'Alice','IT',40000,'alice@gmail.com'),
+(3,'Bob','Finance',35000,'bob@gmail.com');
 
+SELECT * FROM Employees;
 
-SELECT * FROM employee;
+UPDATE Employees SET Salary=45000 WHERE EmpID=2;
 
+DELETE FROM Employees WHERE EmpID=3;
 
-
-INSERT INTO EMPLOYEE VALUES (101, 'Clark', 'John', 'Sales', '2024-02-23', 20000);
-INSERT INTO EMPLOYEE VALUES (102, 'Raj', 'Kumar', 'Marketing', '2023-04-23', 30000);
-INSERT INTO EMPLOYEE VALUES (103, 'Michael', 'Raj', 'IT', '2022-06-23', 50000);
-
-
-
-SELECT first_name, last_name, dept FROM EMPLOYEE;
-
-
-
-SELECT * FROM EMPLOYEE WHERE dept = 'Marketing';
-
-
-
-UPDATE EMPLOYEE SET last_name = 'Raj' WHERE empId = 101;
-SELECT * FROM EMPLOYEE;
-
-
-
-DELETE FROM EMPLOYEE WHERE empID = 102;
-SELECT * FROM EMPLOYEE;
-
-
-
-ALTER TABLE EMPLOYEE ADD DOB INTEGER;
-DESC EMPLOYEE;
-
-
-
-TRUNCATE TABLE EMPLOYEE;
-DESC EMPLOYEE;
-
-
-
-DROP TABLE employee;
+SELECT * FROM Employees;

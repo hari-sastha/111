@@ -1,105 +1,25 @@
--- 1. Setup Database
-CREATE DATABASE IF NOT EXISTS ecom_db;
-USE ecom_db;
-
--- 2. Create Tables in Correct Order
-CREATE TABLE Customers (
-    customer_id INT PRIMARY KEY,
-    name VARCHAR(25) NOT NULL,
-    email VARCHAR(20) NOT NULL UNIQUE,
-    phone_number VARCHAR(20),
-    address VARCHAR(255) -- Added missing column for the New York query
-);
-
 CREATE TABLE Products (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(25) NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
-    quantity_available INT DEFAULT 100 -- Added missing column for the trigger
+    ProdID INTEGER PRIMARY KEY,
+    Name TEXT,
+    Price REAL CHECK (Price > 0),
+    Stock INTEGER CHECK (Stock >= 0)
 );
 
 CREATE TABLE Orders (
-    order_id INT PRIMARY KEY,
-    customer_id INT NOT NULL,
-    order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    total_amount DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+    OrderID INTEGER PRIMARY KEY,
+    CustID INTEGER,
+    ProdID INTEGER,
+    Quantity INTEGER CHECK (Quantity > 0),
+    FOREIGN KEY (CustID) REFERENCES Customers(CustID),
+    FOREIGN KEY (ProdID) REFERENCES Products(ProdID)
 );
 
-CREATE TABLE Order_Details (
-    order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT,
-    product_id INT,
-    quantity_ordered INT,
-    unit_price DECIMAL(10,2),
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
-);
+INSERT INTO Customers VALUES (1,'Dillu');
+INSERT INTO Products VALUES (101,'Laptop',50000,10);
 
--- 3. Insert Data
-INSERT INTO Customers VALUES (101, 'AKASH', 'akash@gmail.com', '9876543210', '123 Broadway, New York');
-INSERT INTO Customers VALUES (102, 'BALA', 'bala13@gmail.com', '9876512345', '456 Main St, Chennai');
-INSERT INTO Customers VALUES (103, 'CHARLES', 'charles21@gmail.com', '9965243201', '789 Wall St, New York');
+INSERT INTO Orders VALUES (1,1,101,2);
 
-INSERT INTO Orders VALUES (1, 101, '2023-02-24', 1000.50);
-INSERT INTO Orders VALUES (2, 102, '2023-01-18', 7000.00);
-INSERT INTO Orders VALUES (3, 103, '2023-12-24', 10000.50);
 
-INSERT INTO Products VALUES (1, 'Mobile', 15000.00, 100);
-INSERT INTO Products VALUES (2, 'Laptop', 50000.00, 50);
-INSERT INTO Products VALUES (3, 'Bluetooth', 1000.00, 200);
+UPDATE Products SET Stock = Stock - 2 WHERE ProdID=101;
 
--- 4. Create Trigger (With Correct Delimiter)
-DELIMITER //
-CREATE TRIGGER after_order_placed
-AFTER INSERT ON Order_Details
-FOR EACH ROW
-BEGIN
-    UPDATE Products
-    SET quantity_available = quantity_available - NEW.quantity_ordered
-    WHERE product_id = NEW.product_id;
-END //
-DELIMITER ;
-
--- 5. Insert into Order_Details (This will now fire the trigger)
-INSERT INTO Order_Details (order_id, product_id, quantity_ordered, unit_price)
-VALUES 
-(1, 1, 5, 20.00),
-(2, 2, 3, 25.00);
-
--- 6. Verification Queries
--- Query A: Nested Subquery (New York)
-SELECT * FROM Order_Details
-WHERE order_id IN (
-    SELECT order_id FROM Orders
-    WHERE customer_id IN (
-        SELECT customer_id FROM Customers
-        WHERE address LIKE '%New York%'
-    )
-);
-
--- Query B: Aggregate Subquery (Above Average)
-SELECT * FROM Customers
-WHERE customer_id IN (
-    SELECT customer_id FROM Orders
-    WHERE total_amount > (SELECT AVG(total_amount) FROM Orders)
-);
-
--- Query C: Inner Join with Group By
-SELECT p.product_name, SUM(od.quantity_ordered) AS total_ordered
-FROM Products p
-INNER JOIN Order_Details od ON p.product_id = od.product_id
-GROUP BY p.product_name;
-
--- Query D: Create and View View
-CREATE OR REPLACE VIEW OrderSummary AS
-SELECT o.order_id, o.order_date, c.name AS customer_name, p.product_name, od.quantity_ordered
-FROM Orders o
-JOIN Customers c ON o.customer_id = c.customer_id
-JOIN Order_Details od ON o.order_id = od.order_id
-JOIN Products p ON od.product_id = p.product_id;
-
-SELECT * FROM OrderSummary;
-
--- Check Products table to see if trigger reduced stock
 SELECT * FROM Products;

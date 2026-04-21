@@ -1,62 +1,30 @@
-// Insert event
+db.users.insertOne({
+  name: "User1",
+  email: "user1@gmail.com",
+  bookings: [
+    { event: "Tech Fest", date: "2026-04-20" }
+  ]
+});
+
 db.events.insertOne({
-  eventName: "Tech Conference",
-  date: ISODate("2024-04-15"),
-  organizer: "Tech Events LLC",
-  venue: "Conference Center A",
-  attendees: ["Alice", "Bob", "Charlie"]
+  name: "Tech Fest",
+  location: "Chennai"
 });
 
-// Insert organizer
-db.organizers.insertOne({
-  organizerName: "Music Festivals Inc",
-  contactPerson: "Emily Adams",
-  eventsOrganized: ["Music Festival", "Summer Concert"]
+db.bookings.insertOne({
+  user: "User1",
+  event: "Tech Fest"
 });
 
-// Insert attendee
-db.attendees.insertOne({
-  attendeeName: "Charlie",
-  eventsAttended: ["Tech Conference", "Music Festival"]
-});
+printjson(db.users.find().toArray());
 
-// Insert venue
-db.venues.insertOne({
-  venueName: "Exhibition Hall",
-  capacity: 500,
-  eventsHosted: ["Art Exhibition", "Business Expo"]
-});
-
-
-
-db.events.aggregate([
-  {
-    $project: {
-      id: "$_id",
-      event_name: "$eventName",
-      iso_date: "$date",
-      organizer: 1,
-      venue: 1,
-      attendees: 1,
-      _id: 0
-    }
-  }
-]);
-
-
-
-db.events.update(
-  { eventName: "Tech Conference" },
-  { $set: { venue: "Conference Center B" } }
+db.users.updateOne(
+  { name: "User1" },
+  { $set: { email: "new@gmail.com" } }
 );
 
+printjson(db.users.find().toArray());
 
+db.users.deleteOne({ name: "User1" });
 
-db.events.updateOne(
-  { eventName: "Tech Conference", venue: "Conference Center A" },
-  { $pull: { attendees: "Bob" } }
-);
-
-
-
-db.events.find().pretty();
+printjson(db.users.find().toArray());
