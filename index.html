@@ -44,7 +44,8 @@
 				z-index: 20;
 			}
 
-			#dsButton {
+			#dsButton,
+			#dbmsButton {
 				padding: 8px 12px;
 				font: inherit;
 				cursor: pointer;
@@ -54,16 +55,19 @@
 				font-weight: 600;
 			}
 
-			#dsButton:hover {
+			#dsButton:hover,
+			#dbmsButton:hover {
 				border-color: var(--border-strong);
 				box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 			}
 
-			#dsButton:active {
+			#dsButton:active,
+			#dbmsButton:active {
 				transform: translateY(1px);
 			}
 
-			#dsButton:focus-visible {
+			#dsButton:focus-visible,
+			#dbmsButton:focus-visible {
 				outline: 3px solid rgba(17, 24, 39, 0.22);
 				outline-offset: 2px;
 			}
@@ -244,6 +248,7 @@
 					<button class="webExpButton" type="button" data-web-exp="7">exp7</button>
 				</div>
 			</details>
+			<button id="dbmsButton" type="button">DBMS</button>
 		</div>
 
 		<div id="instructionsOverlay" aria-hidden="true">

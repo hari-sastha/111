@@ -1,4 +1,5 @@
 const dsButton = document.getElementById('dsButton');
+const dbmsButton = document.getElementById('dbmsButton');
 const webDropdown = document.getElementById('webDropdown');
 const webExpButtons = document.querySelectorAll('[data-web-exp]');
 
@@ -117,6 +118,35 @@ function getDsSteps() {
 		'In the Python file, type a snippet prefix like: exp1 (or exp2, exp3, ...), then press Tab to insert the code.',
 		'If Tab does not expand: press Ctrl+Space to open suggestions and select the snippet.',
 		'Then run the Python file: Right click the file → Run Python File, or open terminal and run: python main.py.'
+	];
+}
+
+function getDbmsSteps() {
+	return [
+		'1) Install the VS Code extension: Python (by Microsoft). This is required to run the Python experiments (exp5/exp6/exp7).',
+		"2) For SQL experiments (exp1/exp2/exp3), VS Code extension is optional, but you MUST have a database installed:",
+		'- Install MySQL Server (or MariaDB). Recommended GUI: MySQL Workbench.',
+		"  Optional VS Code extension: SQLTools (lets you connect and run .sql inside VS Code).",
+		'3) For MongoDB experiment (exp4), VS Code extension is optional, but you MUST have MongoDB tools:',
+		'- Install MongoDB Community Server and MongoDB Shell (mongosh).',
+		'  Optional VS Code extension: MongoDB for VS Code.',
+		'4) Create a folder for your experiment (example: dbms-exp).',
+		'5) Create the right file and insert snippet:',
+		'- exp1/exp2/exp3: create file `exp.sql` → type prefix dbms-exp1 (or 2/3) → Tab.',
+		'- exp4: create file `exp4.js` → type prefix dbms-exp4 → Tab.',
+		'- exp5/exp6/exp7: create file `exp.py` → type prefix dbms-exp5 (or 6/7) → Tab.',
+		'6) How to RUN (choose based on experiment):',
+		'RUN SQL (exp1/2/3): open MySQL Workbench → connect → open your .sql file → click the lightning ⚡ Execute button (or Ctrl+Shift+Enter).',
+		"  Notes: exp2/exp3 include CREATE DATABASE + USE ... ; run the whole script in order.",
+		"RUN MongoDB (exp4): open a terminal in VS Code → start mongosh → select/create DB → run the file:",
+		"  - In terminal: mongosh",
+		"  - Then: load('exp4.js')",
+		"RUN Python (exp5/6/7): open terminal in VS Code in that folder and run: python exp.py",
+		'  Python dependencies:',
+		'- exp5 (Cassandra): install Apache Cassandra and then: pip install cassandra-driver',
+		'- exp6 (Redis): install Redis server and then: pip install redis',
+		'- exp7 (Flask API): pip install flask flask_sqlalchemy flask_bcrypt flask_cors',
+		"  For exp7 after running: open http://127.0.0.1:5000 in browser (you’ll see ‘Banking App Running Successfully’)."
 	];
 }
 
@@ -258,6 +288,22 @@ dsButton.addEventListener('click', async () => {
 		showToast('Copy failed');
 	}
 });
+
+if (dbmsButton) {
+	dbmsButton.addEventListener('click', async () => {
+		try {
+			await copyJsonFile('./dbms.json');
+			showToast('Copied to clipboard');
+			showInstructions(
+				'DBMS – Step by step',
+				[...getCommonSnippetSteps('DBMS'), ...getDbmsSteps()]
+			);
+		} catch (err) {
+			console.error(err);
+			showToast('Copy failed');
+		}
+	});
+}
 
 for (const button of webExpButtons) {
 	button.addEventListener('click', async () => {

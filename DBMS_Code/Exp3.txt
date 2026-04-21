@@ -1,0 +1,65 @@
+-- 1. Initialize the Database
+CREATE DATABASE IF NOT EXISTS LibraryManagementSystem;
+USE LibraryManagementSystem;
+
+-- 2. Create Schema in Relational Order
+-- Author must exist before Book
+CREATE TABLE Author (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(255),
+    BirthDate DATE
+);
+
+-- Book must exist before Transactions
+CREATE TABLE Book (
+    ISBN VARCHAR(20) PRIMARY KEY,
+    Title VARCHAR(255),
+    AuthorID INT,
+    Genre VARCHAR(50),
+    FOREIGN KEY (AuthorID) REFERENCES Author(AuthorID)
+);
+
+-- Member must exist before Transactions
+CREATE TABLE Member (
+    MemberID INT PRIMARY KEY,
+    MemberName VARCHAR(255),
+    Email VARCHAR(255)
+);
+
+-- Transactions links Books and Members
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY,
+    BookID VARCHAR(20),
+    MemberID INT,
+    CheckoutDate DATE,
+    ReturnDate DATE,
+    FOREIGN KEY (BookID) REFERENCES Book(ISBN),
+    FOREIGN KEY (MemberID) REFERENCES Member(MemberID)
+);
+
+-- 3. Insert Master Data
+INSERT INTO Author (AuthorID, AuthorName, BirthDate)
+VALUES (1, 'John Doe', '1990-01-01');
+
+INSERT INTO Book (ISBN, Title, AuthorID, Genre)
+VALUES ('1234567890', 'Sample Book', 1, 'Fiction');
+
+-- Note: We include Member 103 here so the third transaction doesn't fail
+INSERT INTO Member (MemberID, MemberName, Email)
+VALUES 
+(101, 'Alice Smith', 'alice@example.com'),
+(102, 'Reema Teraja', 'reema@example.com'),
+(103, 'Gokul Kumar', 'gokul@example.com'); 
+
+-- 4. Insert Transaction Records
+INSERT INTO Transactions (TransactionID, BookID, MemberID, CheckoutDate, ReturnDate)
+VALUES 
+(1, '1234567890', 101, '2024-02-28', '2024-03-15'),
+(2, '1234567890', 102, '2024-02-20', '2024-03-08'),
+(3, '1234567890', 103, '2024-01-28', '2024-02-15');
+
+-- 5. Verification Queries
+SELECT * FROM Author;
+SELECT * FROM Book;
+SELECT * FROM Member;
+SELECT * FROM Transactions;

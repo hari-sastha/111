@@ -1,0 +1,51 @@
+import json
+import redis
+
+
+
+class BlogContentCache:
+    def __init__(self, redis_host='localhost', redis_port=6379, redis_db=0):
+        self.redis_client = redis.StrictRedis(
+            host=redis_host,
+            port=redis_port,
+            db=redis_db
+        )
+
+
+
+    def get_post(self, post_id):
+        cached_post = self.redis_client.get(f'post:{post_id}')
+
+        if cached_post:
+            print("Retrieving post from cache")
+            return json.loads(cached_post.decode('utf-8'))
+        else:
+            # Fixed title as required
+            post = {
+                'post_id': post_id,
+                'title': 'generative AI',
+                'content': f'Content of Post {post_id}'
+            }
+
+            self.redis_client.set(f'post:{post_id}', json.dumps(post))
+            print("Fetching post from database and caching")
+            return post
+
+
+
+if __name__ == "__main__":
+    blog_cache = BlogContentCache()
+
+    post_id = 1
+
+    # First fetch
+    post = blog_cache.get_post(post_id)
+    print("Post")
+    print("Blog_title :", post['title'])
+
+    # Second fetch (from cache)
+    cached_post = blog_cache.get_post(post_id)
+    print("Blog_title :", cached_post['title'])
+
+
+
